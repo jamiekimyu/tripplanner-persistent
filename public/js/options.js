@@ -62,7 +62,7 @@ $(function(){
       .catch(console.error)
     }
     if(type === 'activity'){
-      $.post('/api/days/'+dayId+'/restaurants', {restaurantId: id})
+      $.post('/api/days/'+dayId+'/activities', {activityId: id})
       .then(() => $(this).prop('disabled', false))
       .catch(console.error)
     }
