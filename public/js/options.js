@@ -18,9 +18,9 @@ $(function(){
   var $activitySelect = $optionsPanel.find('#activity-choices');
 
   //new code
-  let getHotels = $.get('/api/hotels')
-  let getRestaurants = $.get('/api/restaurants')
-  let getActivities = $.get('/api/activities')
+  // let getHotels = $.get('/api/hotels')
+  // let getRestaurants = $.get('/api/restaurants')
+  // let getActivities = $.get('/api/activities')
 
   Promise.all([getHotels, getRestaurants, getActivities])
   .then(([hotels, restaurants, activities]) => {
@@ -44,11 +44,29 @@ $(function(){
 
   // what to do when the `+` button next to a `select` is clicked
   $optionsPanel.on('click', 'button[data-action="add"]', function () {
+    $(this).prop('disabled', true)
     var $select = $(this).siblings('select');
     var type = $select.data('type'); // from HTML data-type attribute
     var id = $select.find(':selected').val();
     // get associated attraction and add it to the current day in the trip
     var attraction = attractionsModule.getByTypeAndId(type, id);
+    let dayId = tripModule.getCurrentDay().id;
+    if(type === 'hotel'){
+      $.post('/api/days/'+dayId+'/hotels', {hotelId: id})
+      .then(() => $(this).prop('disabled', false))
+      .catch(console.error)
+    }
+    if(type === 'restaurant'){
+      $.post('/api/days/'+dayId+'/restaurants', {restaurantId: id})
+      .then(() => $(this).prop('disabled', false))
+      .catch(console.error)
+    }
+    if(type === 'activity'){
+      $.post('/api/days/'+dayId+'/restaurants', {restaurantId: id})
+      .then(() => $(this).prop('disabled', false))
+      .catch(console.error)
+    }
+    
     tripModule.addToCurrent(attraction);
   });
 

@@ -41,6 +41,29 @@ var attractionModule = (function () {
       .append($button);
     var self = this;
     $button.on('click', function () {
+       let dayId = tripModule.getCurrentDay().id;
+       console.log(self.type);
+      if(self.type === 'hotel'){
+        $.ajax({
+          url: '/api/days/'+dayId+'/hotels',
+          type: 'DELETE',
+          data: {hotelId: self.id}
+        })
+      }
+      if(self.type === 'restaurant'){
+        $.ajax({
+          url: '/api/days/'+dayId+'/restaurants',
+          type: 'DELETE',
+          data: {restaurantId: self.id}
+        })
+      }
+      if(self.type === 'activity'){
+        $.ajax({
+          url: '/api/days/'+dayId+'/activities',
+          type: 'DELETE',
+          data: {activityId: self.id}
+        })
+      }
       tripModule.removeFromCurrent(self); // remove from day model
     });
     return this;

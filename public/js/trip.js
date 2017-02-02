@@ -47,35 +47,64 @@ var tripModule = (function () {
 
   function addDay () {
     if (this && this.blur) this.blur(); // removes focus box from buttons
-    var newDay = dayModule.create({ number: days.length + 1 }); // dayModule
-    days.push(newDay);
-    if (days.length === 1) {
+    var number = days.length + 1;
+    $.post('/api/days/'+number)
+    .then(newDay => {
+      newDay = dayModule.create(newDay);
+      days.push(newDay);
+      if (days.length === 1) {
       currentDay = newDay;
     }
     switchTo(newDay);
+    })
+    // var newDay = dayModule.create({ number: number }); // dayModule
+    // days.push(newDay);
+    // if (days.length === 1) {
+    //   currentDay = newDay;
+    // }
+    
   }
 
   function deleteCurrentDay () {
     // prevent deleting last day
     if (days.length < 2 || !currentDay) return;
     // remove from the collection
-    var index = days.indexOf(currentDay),
-      previousDay = days.splice(index, 1)[0],
-      newCurrent = days[index] || days[index - 1];
+    var index = days.indexOf(currentDay)
+     let previousDay = days.splice(index, 1)[0]
+      let delNum = previousDay.number;
+      $.ajax({
+        url: '/api/days/' + delNum,
+        type: 'DELETE'
+      }).then(() => console.log('deleted'));
+      let newCurrent = days[index] || days[index - 1];
     // fix the remaining day numbers
     days.forEach(function (day, i) {
       day.setNumber(i + 1);
     });
     switchTo(newCurrent);
     previousDay.hideButton();
+
   }
 
   // globally accessible module methods
 
   var publicAPI = {
 
+    getCurrentDay: function(){
+      return currentDay;
+    },
+
     load: function () {
-      $(addDay);
+      //if(!days.length) $(addDay)
+      //$(addDay);
+      getDays.then(dataDays => {
+        console.log(dataDays)
+        if(!dataDays.length) $(addDay)
+        else {
+          days = dataDays.map(dayModule.create)
+          switchTo(days[0])
+        }
+      })
     },
 
     switchTo: switchTo,

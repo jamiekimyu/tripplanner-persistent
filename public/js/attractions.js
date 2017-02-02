@@ -12,18 +12,24 @@ var attractionsModule = (function () {
 // let getHotels = $.get('/api/hotels')
 // let getRestaurants = $.get('/api/restaurants')
 // let getActivities = $.get('/api/activity')
+var enhanced
+Promise.all([getHotels, getRestaurants, getActivities])
+.then(([hotels, restaurants, activities]) => {
+  console.log('0000000000', [hotels, restaurants, activities])
+ enhanced = {
+    hotels: hotels.map(attractionModule.create),
+    restaurants: restaurants.map(attractionModule.create),
+    activities: activities.map(attractionModule.create),
+  };
 
-// Promise.all([getHotels, getRestaurants, getActivities])
-// .then([hotels, restuarants, activities] => {
-
-// })
+})
 
   // application state
-// var enhanced = {
-//     hotels: hotels.map(attractionModule.create),
-//     restaurants: restaurants.map(attractionModule.create),
-//     activities: activities.map(attractionModule.create),
-//   };
+  // var enhanced = {
+  //   hotels: hotels.map(attractionModule.create),
+  //   restaurants: restaurants.map(attractionModule.create),
+  //   activities: activities.map(attractionModule.create),
+  // };
 
   // private helper methods (only available inside the module)
 

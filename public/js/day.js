@@ -24,7 +24,7 @@ var dayModule = (function () {
   });
 
   // Day class and setup
-
+ 
   function Day (data) {
     // for brand-new days
     this.number = 0;
@@ -97,13 +97,16 @@ var dayModule = (function () {
     switch (attraction.type) {
       case 'hotel':
         if (this.hotel) this.hotel.hide();
+        //$.post('/api/days/'+this.id+'/hotels', {hotelId: attraction.id})
         this.hotel = attraction;
         break;
       case 'restaurant':
+        //$.post('/api/days/'+this.id+'/restaurants', {restaurantId: attraction.id})
         utilsModule.pushUnique(this.restaurants, attraction);
         break;
       case 'activity':
         utilsModule.pushUnique(this.activities, attraction);
+        //$.post('/api/days/'+this.id+'/activities', {activityId: attraction.id})
         break;
       default: console.error('bad type:', attraction);
     }
